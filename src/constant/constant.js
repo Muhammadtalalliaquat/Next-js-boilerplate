@@ -8,6 +8,7 @@ export const ApiRoutes = {
     register: BASIC_URL + `user/register`,
     verifyEmail: BASIC_URL + `user/verifyemail`,
     forgotPassword: BASIC_URL + `user/requestPasswordReset`,
+    forgotPasswordSent: BASIC_URL + `user/resetPassword`,
     getTask: BASIC_URL + `task`,
     postTask: BASIC_URL + `task`,
     editTask: BASIC_URL + `task`,
