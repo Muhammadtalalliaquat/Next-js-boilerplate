@@ -1,14 +1,16 @@
 "use client";
 
-import { clearUser } from "@/store/features/userSlice";
 import { useDispatch } from "react-redux";
-
-
-import React from "react";
+import { clearUser } from "@/store/features/userSlice";
+import { io } from "socket.io-client";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "../home/main.module.css";
+
+const socket = io("http://localhost:4000");
 
 export default function Home() {
-
+  const [userList, setUserList] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -19,32 +21,61 @@ export default function Home() {
     router.push("/");
   };
 
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem(`user`));
+    if (storedUser && storedUser._id) {
+      socket.emit("register_user", {
+        _id: storedUser._id,
+        userName: storedUser.userName,
+      });
+    } else {
+      console.log("User not found in local storage");
+    }
+    socket.on("all_users", (allUsers) => {
+      console.log("Received users:", allUsers);
+      setUserList(allUsers);
+    });
+
+    return () => socket.off("all_users");
+  }, []);
+
+  const startChat = (email, _id) => {
+    console.log("Start chat clicked:", { email, _id });
+    socket.emit("fetch_user", { email, _id });
+  };
+
   return (
-    <div style={styles.container}>
-      <h2>Welcome to our site!</h2>
-      <button onClick={logoutUser} style={styles.logoutButton}>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Chat App</h2>
+
+      <div className={styles.chatList}>
+        {userList.length > 0 ? (
+          userList.map((user, index) => (
+            <div key={index} className={styles.chatItem}>
+              {/* Profile Picture with First Letter */}
+              <div className={styles.profilePic}>
+                {user.userName.charAt(0).toUpperCase()}
+              </div>
+              {/* <button onClick={() => startChat(user.email, user._id)} className={styles.userName}>{user.userName}</button> */}
+              <span
+                onClick={() => startChat(user.email, user._id)} // Pass user data
+                className={styles.userName}
+              >
+                {user.userName}
+              </span>
+              <span className={user.online ? styles.online : styles.offline}>
+                {user.online ? "🟢" : "⚪"}
+              </span>
+            </div>
+          ))
+        ) : (
+          <p className={styles.noUsers}>No users connected</p>
+        )}
+      </div>
+
+      <button onClick={logoutUser} className={styles.logoutButton}>
         Logout
       </button>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100vh",
-    backgroundColor: "#f5f5f5",
-  },
-  logoutButton: {
-    marginTop: "20px",
-    padding: "10px 20px",
-    backgroundColor: "#FF4D4D",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-};

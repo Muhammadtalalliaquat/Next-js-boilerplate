@@ -1,0 +1,93 @@
+/* Chat app styling code  */
+  
+.chatContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .header {
+    text-align: center;
+    color: #4caf50;
+    margin-bottom: 20px;
+  }
+  
+  .chatBox {
+    height: 400px;
+    overflow-y: scroll;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .sentMessage {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    max-width: 70%;
+    margin-left: auto;
+    text-align: right;
+  }
+  
+  .receivedMessage {
+    align-self: flex-start;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    max-width: 70%;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .messageText {
+    margin: 0;
+  }
+  
+  .messageMeta {
+    font-size: 0.8rem;
+    color: #555;
+  }
+  
+  .inputContainer {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .input {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .inputError {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid red;
+  }
+  
+  .sendButton {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .errorText {
+    color: red;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
