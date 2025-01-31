@@ -39,9 +39,12 @@ export default function Home() {
     return () => socket.off("all_users");
   }, []);
 
-  const startChat = (email, _id) => {
-    console.log("Start chat clicked:", { email, _id });
+  const startChat = (userName , email, _id) => {
+    console.log("Start chat clicked:", {userName, email, _id });
     socket.emit("fetch_user", { email, _id });
+
+    const queryString = new URLSearchParams({ email , _id, userName }).toString();
+    router.push(`/chat?${queryString}`);
   };
 
   return (
@@ -54,11 +57,12 @@ export default function Home() {
             <div key={index} className={styles.chatItem}>
               {/* Profile Picture with First Letter */}
               <div className={styles.profilePic}>
-                {user.userName.charAt(0).toUpperCase()}
+                {/* {user.userName.charAt(0).toUpperCase()} */}
+                {user.userName ? user.userName.slice(0, 1).toUpperCase() : ``}
               </div>
               {/* <button onClick={() => startChat(user.email, user._id)} className={styles.userName}>{user.userName}</button> */}
               <span
-                onClick={() => startChat(user.email, user._id)} // Pass user data
+                onClick={() => startChat(user.userName, user.email, user._id)}
                 className={styles.userName}
               >
                 {user.userName}
