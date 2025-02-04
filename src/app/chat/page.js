@@ -11,6 +11,8 @@ import { FaArrowLeft } from "react-icons/fa";
 const socket = io("http://localhost:4000");
 
 export default function Chat() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
   const [message, setMessage] = useState("");
   const [newMessage, setNewMessage] = useState([]);
   const [msgError, setMsgError] = useState("");
@@ -21,15 +23,16 @@ export default function Chat() {
   const email = searchParams.get("email");
   const _id = searchParams.get("_id");
 
-  const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
+  // const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
   const senderId = loggedInUser?._id;
 
   useEffect(() => {
-    if (!email || !_id) {
-      console.log("Missing chat user details:", { email, _id });
-    } else {
-      console.log("Chat with:", userName, email, _id);
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user")) || {};
+      setLoggedInUser(user);
     }
+
+    if (!senderId || !_id) return;
 
     socket.emit("user_online", { userId: senderId });
 
@@ -39,17 +42,35 @@ export default function Chat() {
       }
     });
 
+    socket.emit("fetch_prev_chat", { senderId, receiverId: _id });
+
+    socket.on("prev_chat", (messages) => {
+      messages.forEach((msg) => {
+        msg.time = new Date(msg.createdAt).toLocaleString();
+      });
+      setNewMessage(messages);
+    });
+
     socket.on("new_chat", (data) => {
       console.log("Message received:", data);
       setNewMessage((prevMessages) => [...prevMessages, data]);
     });
+
+    // socket.emit('new_message', data);
+
+    socket.on("send_message", (data) => {
+      console.log("new chat received", data);
+      setNewMessage((prevMessages) => [...prevMessages, data]);
+    });
+
     return () => {
       socket.emit("user_offline", { userId: senderId });
-      socket.off("new_chat");
       socket.off("user_status");
+      socket.off("prev_chat");
+      socket.off("send_message");
+      socket.off("new_chat");
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [senderId, _id]);
 
   const sendMessage = () => {
     if (message.trim()) {
@@ -63,7 +84,10 @@ export default function Chat() {
         receiverId: _id,
         time: new Date().toLocaleTimeString(),
       };
+
       socket.emit("new_chat", chatMessage);
+
+      socket.emit("new_message", chatMessage);
 
       setMessage("");
     } else {
@@ -99,6 +123,7 @@ export default function Chat() {
             <span className={styles.userName}>
               {userName || "Unknown User"}
             </span>
+
             <p
               className={`${styles.status} ${
                 isOnline ? styles.online : styles.offline
@@ -112,7 +137,7 @@ export default function Chat() {
         <div className={styles.chatBox}>
           {newMessage.map((msg, index) => (
             <div
-              key={index}
+              key={index + msg.senderId}
               className={`${styles.messageWrapper} ${
                 msg.senderId === senderId
                   ? styles.sentMessage
@@ -125,8 +150,16 @@ export default function Chat() {
                 }`}
               >
                 <p>{msg.message}</p>
-                <p className={styles.timestamp}>{msg.time}</p>
               </div>
+              <p
+                className={`${styles.timestamp} ${
+                  msg.senderId === senderId
+                    ? styles.sentTimestamp
+                    : styles.receivedTimestamp
+                }`}
+              >
+                {msg.time}
+              </p>
             </div>
           ))}
         </div>

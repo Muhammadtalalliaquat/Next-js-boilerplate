@@ -1,10 +1,14 @@
-// import Login from "./login/page";
+
 import AuthForm from "../compoments/AuthForm";
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 
-export default function Home() {
+export default function App() {
   return (
-    
-        <AuthForm />
+    <>
+      {/* <ToastContainer position="top-right" autoClose={3000} /> */}
+      <AuthForm />
+    </>
   );
 }
