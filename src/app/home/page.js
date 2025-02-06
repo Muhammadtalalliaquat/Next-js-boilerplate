@@ -3,10 +3,11 @@
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/features/userSlice";
 import { io } from "socket.io-client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../home/main.module.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const socket = io("http://localhost:4000");
 
@@ -21,6 +22,12 @@ export default function Home() {
     localStorage.removeItem("user");
     router.push("/");
   };
+
+  const userListRef = useRef(userList);
+
+  useEffect(() => {
+    userListRef.current = userList;
+  }, [userList]);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem(`user`));
@@ -45,9 +52,21 @@ export default function Home() {
         return;
       }
 
-      toast.info(`New message from ${data.senderId}: ${data.message}`, {
-        position: "top-right",
-        autoClose: 3000,
+      const sender = userListRef.current.find(
+        (user) => user._id === data.senderId
+      );
+      const senderName = sender ? sender.userName : data.senderId;
+
+      toast.info(`🦄 New message from ${senderName}: ${data.message}`, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Zoom,
       });
     });
 
@@ -71,9 +90,26 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <ToastContainer />
+      <div className={styles.header}>
+        <h2 className={styles.title}>Chat: </h2>
+        <button onClick={logoutUser} className={styles.logoutButton}>
+          Logout
+        </button>
+      </div>
 
-      <h2 className={styles.title}>Chat App</h2>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Zoom}
+      />
 
       <div className={styles.chatList}>
         {userList.length > 0 ? (
@@ -96,10 +132,6 @@ export default function Home() {
           <p className={styles.noUsers}>No users connected</p>
         )}
       </div>
-
-      <button onClick={logoutUser} className={styles.logoutButton}>
-        Logout
-      </button>
     </div>
   );
 }

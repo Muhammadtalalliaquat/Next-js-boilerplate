@@ -46,13 +46,14 @@
   margin-right: 10px;
 } */
 
-
 .chatBox {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent; 
 }
 
 .messageWrapper {

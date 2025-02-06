@@ -12,7 +12,6 @@ const socket = io("http://localhost:4000");
 
 export default function Chat() {
   const [loggedInUser, setLoggedInUser] = useState(null);
-
   const [message, setMessage] = useState("");
   const [newMessage, setNewMessage] = useState([]);
   const [msgError, setMsgError] = useState("");

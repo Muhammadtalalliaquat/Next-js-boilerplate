@@ -13,11 +13,22 @@
   /* Title */
   .title {
     font-size: 2rem;
+    font-weight: bold;
     color: #075e54;
+  }
+
+  .header {
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
   }
   
+  
   /* Chat List */
+
   .chatList {
     width: 100%;
     max-width: 400px;
@@ -75,12 +86,12 @@
     background-color: #ff4d4d;
     color: white;
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 0.8rem;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease-in-out;
-    margin-top: 20px;
   }
   
   .logoutButton:hover {
@@ -97,3 +108,14 @@
     font-weight: bold;
   }
   
+
+
+  @media (max-width: 668px) {
+    .container{
+    height: auto;
+    background-color: white;
+    }
+    .chatList{
+      background: #fcfcfc;
+    }
+  }
