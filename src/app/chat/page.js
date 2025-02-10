@@ -6,7 +6,7 @@ import styles from "../chat/main.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IoMdSend } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
-// import Image from "next/image";
+import { FaDeleteLeft } from "react-icons/fa6";
 
 const socket = io("http://localhost:4000");
 
@@ -22,10 +22,28 @@ export default function Chat() {
   const email = searchParams.get("email");
   const _id = searchParams.get("_id");
 
+  // const friendsData = searchParams.get("friends");
+  // const friends = friendsData ? JSON.parse(decodeURIComponent(friendsData)) : [];
+
   // const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
   const senderId = loggedInUser?._id;
 
+  const deleteMessage = (messageId) => {
+    if (!senderId) {
+      console.log("User not authenticated.");
+      return;
+    }
+
+    socket.emit("delete_message", { messageId, senderId });
+
+    setNewMessage((prevMessages) =>
+      prevMessages.filter((msg) => msg._id !== messageId)
+    );
+  };
+
   useEffect(() => {
+    // console.log("Sender ID:" , senderId , "Friends:", friends);
+
     if (typeof window !== "undefined") {
       const user = JSON.parse(localStorage.getItem("user")) || {};
       setLoggedInUser(user);
@@ -48,19 +66,39 @@ export default function Chat() {
         msg.time = new Date(msg.createdAt).toLocaleString();
       });
       setNewMessage(messages);
+
+      // socket.emit("message_seen", { senderId: _id, receiverId: senderId });
     });
 
     socket.on("new_chat", (data) => {
       console.log("Message received:", data);
       setNewMessage((prevMessages) => [...prevMessages, data]);
+
+      // if (data.receiverId === senderId) {
+      //   socket.emit("message_seen", {
+      //     senderId: data.senderId,
+      //     receiverId: senderId,
+      //   });
+      // }
+    });
+
+    socket.on("message_deleted", ({ messageId }) => {
+      setNewMessage((prevMessages) =>
+        prevMessages.filter((msg) => msg._id !== messageId)
+      );
     });
 
     // socket.emit('new_message', data);
 
-    socket.on("send_message", (data) => {
-      console.log("new chat received", data);
-      setNewMessage((prevMessages) => [...prevMessages, data]);
-    });
+    // socket.on("message_seen_update", ({ senderId, receiverId }) => {
+    //   setNewMessage((prevMessages) =>
+    //     prevMessages.map((msg) =>
+    //       msg.senderId === senderId && msg.receiverId === receiverId
+    //         ? { ...msg, status: "seen" }
+    //         : msg
+    //     )
+    //   );
+    // });
 
     return () => {
       socket.emit("user_offline", { userId: senderId });
@@ -68,6 +106,7 @@ export default function Chat() {
       socket.off("prev_chat");
       socket.off("send_message");
       socket.off("new_chat");
+      socket.off("message_deleted");
     };
   }, [senderId, _id]);
 
@@ -149,16 +188,34 @@ export default function Chat() {
                 }`}
               >
                 <p>{msg.message}</p>
+                {/* <p className={styles.statusIcon}>
+                  {msg.status === "seen"
+                    ? "✅"
+                    : msg.status === "delivered"
+                    ? "✓✓"
+                    : "✓"}
+                </p> */}
               </div>
-              <p
-                className={`${styles.timestamp} ${
-                  msg.senderId === senderId
-                    ? styles.sentTimestamp
-                    : styles.receivedTimestamp
-                }`}
-              >
-                {msg.time}
-              </p>
+              <div className={styles.msgDiv}>
+                <p
+                  className={`${styles.timestamp} ${
+                    msg.senderId === senderId
+                      ? styles.sentTimestamp
+                      : styles.receivedTimestamp
+                  }`}
+                >
+                  {msg.time}
+                </p>
+
+                {msg.senderId === senderId && (
+                  <button
+                    onClick={() => deleteMessage(msg._id)}
+                    className={styles.deleteButton}
+                  >
+                    <FaDeleteLeft size={15} color="black"/>
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>

@@ -76,17 +76,22 @@ export default function Home() {
     };
   }, []);
 
-  const startChat = (userName, email, _id) => {
+  const startChat = (userName, email, _id ) => {
     console.log("Start chat clicked:", { userName, email, _id });
-    socket.emit("fetch_user", { email, _id });
+    socket.emit("fetch_user", { email, _id , userName});
+
+    // const friendsData = encodeURIComponent(JSON.stringify(userList));
 
     const queryString = new URLSearchParams({
       email,
       _id,
       userName,
+      // friends: friendsData,
     }).toString();
     router.push(`/chat?${queryString}`);
   };
+
+      
 
   return (
     <div className={styles.container}>

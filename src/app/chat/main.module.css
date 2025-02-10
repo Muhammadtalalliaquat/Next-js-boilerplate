@@ -113,6 +113,26 @@
   text-align: left;
 }
 
+.msgDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.deleteButton {
+  opacity: 0.2;
+  transition: opacity 0.2s ease-in-out;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.msgDiv:hover .deleteButton {
+  opacity: 1;
+}
+
 
 .inputContainer {
   display: flex;
