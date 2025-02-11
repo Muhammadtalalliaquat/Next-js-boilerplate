@@ -1,16 +1,14 @@
 
 import { createSlice } from '@reduxjs/toolkit'
-// import { GoVerified } from 'react-icons/go';
 
 
 const initialState = {
+    // user: null,
     token: null,
     isAuthenticated: false,
     emailVerifed: false,
     emailVerifedMsg: ``,
     error: null
-    // isLogin: false,
-    // user: null
 }
 
 export const userSlice = createSlice({
@@ -22,6 +20,7 @@ export const userSlice = createSlice({
             state.token = action.payload.token;
             state.isAuthenticated = true;
             state.error = null;
+            state.emailVerifed = action.payload.user.verifiedEmail || false;
         },
         clearUser: (state) => {
             state.user = null;

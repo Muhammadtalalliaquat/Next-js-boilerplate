@@ -9,6 +9,12 @@ export const registerUser = (userData) => async (dispatch) => {
     try{
         const response = await axios.post(ApiRoutes.register , userData);
         const { user , verificationToken } = response.data.data;
+
+        localStorage.setItem('token', verificationToken);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        dispatch(setUser({ user, verificationToken }));
+
         console.log("API Response:", user, verificationToken);
         return { success: true, user, verificationToken };
 
