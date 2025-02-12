@@ -33,7 +33,7 @@ export const verifyEmail  = (token) => async (dispatch) => {
         });
 
         dispatch(setSuccess(response.data.message));
-        console.log(response.data.message);
+        // console.log(response.data.message);
 
     } catch (error) {
         const errorMessage = error.response?.data?.message || 'Verification failed'
@@ -67,7 +67,7 @@ export const loginUser = (credentials) => async (dispatch) => {
 export const requestPasswordReset =  async (email) =>{
     try{
         const response = await axios.post(ApiRoutes.forgotPassword , { email });
-        console.log(response.data.message)
+        console.log(response.data?.data?.message)
     } catch(error) {
         console.log(error.rresponse?.data?.message)
 

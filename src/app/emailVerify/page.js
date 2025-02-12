@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useDispatch , useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { verifyEmail } from "../../compoments/authAction";
 import { useRouter , useSearchParams } from "next/navigation";
 import styles from "./main.module.css";

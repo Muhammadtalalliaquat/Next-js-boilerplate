@@ -21,57 +21,58 @@ export default function AuthForm() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const result = isLogin
-        ? await dispatch(loginUser({ email, password }))
-        : await dispatch(registerUser({ email, password, userName }));
-
-      console.log(result, "Response from auth action");
-
-      if (isLogin) {
-        router.push("/home");
-      } else {
-        router.push("/emailVerify");
-      }
-    } catch (error) {
-      console.error("Unexpected error:", error);
-    }
-  };
-
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
 
   //   try {
-  //     if (isLogin) {
-  //       const result = await dispatch(loginUser({ email, password }));
-  //       console.log(result.user, "datat revicced");
-  //       if (result.user.verifiedEmail) {
-  //         router.push("/home");
-  //       } else {
-  //         console.log("Please verify your email before proceeding.");
-  //       }
+  //     const result = isLogin
+  //       ? await dispatch(loginUser({ email, password }))
+  //       : await dispatch(registerUser({ email, password, userName }));
+
+  //     console.log(result, "Response from auth action");
+
+  //     if (result.success) {
+  //       router.push("/home");
   //     } else {
-  //       const result = await dispatch(
-  //         registerUser({ email, password, userName })
-  //       );
-
-  //       // router.push("/home");
-
-  //       if (result.user.verifiedEmail) {
-  //         router.push("/home");
-  //       } else {
-  //         router.push("/emailVerify");
-  //         console.log("Please verify your email before proceeding.");
-  //       }
+  //       router.push("/emailVerify");
   //     }
   //   } catch (error) {
   //     console.error("Unexpected error:", error);
-  //     // setError("An unexpected error occurred. Please try again.");
   //   }
   // };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (isLogin) {
+        const result = await dispatch(loginUser({ email, password }));
+        console.log(result.user, "datat revicced");
+        if (result.success) {
+          router.push("/home");
+        } else {
+          console.log("Please verify your email before proceeding.");
+        }
+      } else {
+        const result = await dispatch(
+          registerUser({ email, password, userName })
+        );
+
+        // router.push("/home");
+
+        if (result.success) {
+          router.push("/emailVerify");
+        } 
+        // else {
+        //   router.push("/emailVerify");
+        //   console.log("Please verify your email before proceeding.");
+        // }
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      // setError("An unexpected error occurred. Please try again.");
+    }
+  };
 
   const requestPasswordReset = async (e) => {
     e.preventDefault();
