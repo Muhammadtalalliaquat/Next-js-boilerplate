@@ -168,7 +168,7 @@ export default function Chat() {
                 isOnline ? styles.online : styles.offline
               }`}
             >
-              {isOnline ? "Online" : "Offline"}
+              {isOnline ? "Online" : ""}
             </p>
           </div>
         </div>
