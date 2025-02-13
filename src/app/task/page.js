@@ -12,7 +12,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 export default function Task() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { task, error, isLoading, addTaskStatus } = useSelector(
+  const { task, error } = useSelector(
     (state) => state.task
   );
 

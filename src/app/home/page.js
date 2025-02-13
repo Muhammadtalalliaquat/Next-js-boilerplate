@@ -9,7 +9,7 @@ import styles from "../home/main.module.css";
 import { ToastContainer, toast, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const socket = io("http://localhost:4000");
+const socket = io("https://back-end-sever-chat-app-production.up.railway.app/");
 
 export default function Home() {
   const [userList, setUserList] = useState([]);

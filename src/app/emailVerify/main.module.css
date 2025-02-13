@@ -1,6 +1,4 @@
 
-/* EmailVerificationPage.module.css */
-
 .container {
     display: flex;
     justify-content: center;
@@ -31,14 +29,4 @@
     line-height: 1.5;
     margin-bottom: 1rem;
   }
-  
-  /* .note {
-    font-size: 0.9rem;
-    color: #777;
-  }
-  
-  .link {
-    color: #007bff;
-    text-decoration: none;
-  } */
   
