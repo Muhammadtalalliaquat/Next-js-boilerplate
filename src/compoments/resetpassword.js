@@ -4,7 +4,7 @@ import { ApiRoutes } from "@/constant/constant";
 import style from "../app/resetpassword/main.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import withAuthCheck from "../HOC/withAuth";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,7 +13,6 @@ function ResetpasswordComponment() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const id = searchParams.get("id");
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
