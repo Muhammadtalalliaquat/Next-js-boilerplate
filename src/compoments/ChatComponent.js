@@ -7,11 +7,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { IoMdSend } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-
+import withAuthCheck from "../HOC/withAuth";
 
 const socket = io("https://back-end-sever-chat-app-production.up.railway.app/");
 
-export default function Chat() {
+function Chat() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [message, setMessage] = useState("");
   const [newMessage, setNewMessage] = useState([]);
@@ -213,7 +213,7 @@ export default function Chat() {
                     onClick={() => deleteMessage(msg._id)}
                     className={styles.deleteButton}
                   >
-                    <FaDeleteLeft size={15} color="black"/>
+                    <FaDeleteLeft size={15} color="black" />
                   </button>
                 )}
               </div>
@@ -239,3 +239,5 @@ export default function Chat() {
     </>
   );
 }
+
+export default withAuthCheck(Chat);

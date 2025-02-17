@@ -5,8 +5,10 @@ import { useDispatch } from "react-redux";
 import { verifyEmail } from "./authAction";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "../app/emailVerify/main.module.css";
+import withAuthCheck from "../HOC/withAuth";
 
-export default function EmailVerifyComponent() {
+
+ function EmailVerifyComponent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const dispatch = useDispatch();
@@ -46,3 +48,5 @@ export default function EmailVerifyComponent() {
     </div>
   );
 }
+
+export default withAuthCheck(EmailVerifyComponent);

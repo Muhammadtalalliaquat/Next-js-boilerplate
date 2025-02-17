@@ -8,10 +8,11 @@ import { useRouter } from "next/navigation";
 import styles from "../home/main.module.css";
 import { ToastContainer, toast, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import withAuthCheck from "../../HOC/withAuth";
 
 const socket = io("https://back-end-sever-chat-app-production.up.railway.app/");
 
-export default function Home() {
+function Home() {
   const [userList, setUserList] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -76,9 +77,9 @@ export default function Home() {
     };
   }, []);
 
-  const startChat = (userName, email, _id ) => {
+  const startChat = (userName, email, _id) => {
     console.log("Start chat clicked:", { userName, email, _id });
-    socket.emit("fetch_user", { email, _id , userName});
+    socket.emit("fetch_user", { email, _id, userName });
 
     // const friendsData = encodeURIComponent(JSON.stringify(userList));
 
@@ -90,8 +91,6 @@ export default function Home() {
     }).toString();
     router.push(`/chat?${queryString}`);
   };
-
-      
 
   return (
     <div className={styles.container}>
@@ -140,3 +139,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withAuthCheck(Home);
