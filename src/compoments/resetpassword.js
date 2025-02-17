@@ -4,7 +4,7 @@ import { ApiRoutes } from "@/constant/constant";
 import style from "../app/resetpassword/main.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSearchParams , useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import withAuthCheck from "../HOC/withAuth";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,6 +30,7 @@ function ResetpasswordComponment() {
 
     if (!password) {
       setError("Passwords do not match");
+      setIsSubmitting(false);
       return;
     }
 
@@ -57,7 +58,6 @@ function ResetpasswordComponment() {
       setError(null);
       setIsSubmitting(false);
       setPassword("");
-      router.push("/");
     } catch (error) {
       console.log("Error resetting password:", error);
       const errorMessage = error.response?.data?.msg || "Something went wrong.";
