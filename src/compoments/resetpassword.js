@@ -6,21 +6,25 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast, Bounce } from "react-toastify";
-import withAuthCheck from "../HOC/withAuth";
+// import withAuthCheck from "../HOC/withAuth";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
-function ResetpasswordComponment() {
+export default function ResetpasswordComponment() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const id = searchParams.get("id");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
   // const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    console.log("data revicve", token, "userId", id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!id || !token) {
+      router.push("/");
+    }
+    console.log("Data received:", token, "UserID:", id);
   }, []);
 
   const hanedlePasswordReset = async (e) => {
@@ -105,4 +109,4 @@ function ResetpasswordComponment() {
   );
 }
 
-export default withAuthCheck(ResetpasswordComponment);
+// export default withAuthCheck(ResetpasswordComponment);

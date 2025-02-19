@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 import styles from "../home/main.module.css";
 import { ToastContainer, toast, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import withAuthCheck from "../../HOC/withAuth";
+// import withAuthCheck from "../../HOC/withAuth";
 
 const socket = io("https://back-end-sever-chat-app-production.up.railway.app/");
 
-function Home() {
+export default function Home() {
   const [userList, setUserList] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -32,6 +32,9 @@ function Home() {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem(`user`));
+    if (!storedUser) {
+      router.push("/");
+    }
     if (storedUser && storedUser._id) {
       socket.emit("register_user", {
         _id: storedUser._id,
@@ -133,11 +136,11 @@ function Home() {
             </div>
           ))
         ) : (
-          <p className={styles.noUsers}>No users connected</p>
+          <p className={styles.noUsers}>No friends connected Please login</p>
         )}
       </div>
     </div>
   );
 }
 
-export default withAuthCheck(Home);
+// export default withAuthCheck(Home);

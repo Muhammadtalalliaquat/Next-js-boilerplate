@@ -7,11 +7,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { IoMdSend } from "react-icons/io";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import withAuthCheck from "../HOC/withAuth";
+// import withAuthCheck from "../HOC/withAuth";
 
 const socket = io("https://back-end-sever-chat-app-production.up.railway.app/");
 
-function Chat() {
+export default function Chat() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [message, setMessage] = useState("");
   const [newMessage, setNewMessage] = useState([]);
@@ -41,6 +41,18 @@ function Chat() {
       prevMessages.filter((msg) => msg._id !== messageId)
     );
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user")) || null;
+      setLoggedInUser(user);
+  
+      if (!user) {
+        router.push("/");
+      }
+    }
+  }, []);
+  
 
   useEffect(() => {
     // console.log("Sender ID:" , senderId , "Friends:", friends);
@@ -240,4 +252,4 @@ function Chat() {
   );
 }
 
-export default withAuthCheck(Chat);
+// export default withAuthCheck(Chat);
